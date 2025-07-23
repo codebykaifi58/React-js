@@ -11,6 +11,22 @@ function Signup(){
 
 const handlesubmit = async (e) => {
   e.preventDefault();
+ if (!username || !email || !phone || !password || !confPassword) {
+      alert("Please fill in all fields.");
+      return;
+    }
+
+    if (password !== confPassword) {
+      alert("Passwords do not match.");
+      return;
+    }
+   else {
+    // Login form validation
+    if (!username || !password) {
+      alert("Please enter username and password.");
+      return;
+    }
+}
 
   try {
     const res = await fetch("http://localhost/React-js/Chat-App/back-end/Registered.php", {

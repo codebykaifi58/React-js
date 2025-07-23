@@ -27,6 +27,27 @@ if ($password !== $conf_password) {
     exit;
 }
 
+// username check kary ga ya function ka kahe username duplicate to nhi ha
+$result =  mysqli_query($con, "SELECT *FROM signup_login WHERE username = '$username'");
+if(mysqli_num_rows($result) > 0){
+    echo json_encode(["Succes" => false, "message" => "Username is already exist"]);
+    exit;
+}
+
+// email check kary ga ya funciton ka kahe email duplicate to nhi ha
+$result = mysqli_query($con, "SELECT *FROM signup_login WHERE email = '$email'");
+if(mysqli_num_rows($result)>0){
+    echo json_encode(["Succes" => false, "message" => "Email is already exist"]);
+    exit;
+}
+
+// phone check kary ga ya funciton ka kahe phone number duplicate to nhi ha
+
+$result = mysqli_query($con, "SELECT *FROM signup_login WHERE phone = '$phone'");
+if(mysqli_num_rows($result)>0){
+    echo json_encode(["Succes" => false, "Message" => "Phone number is already exist"]);
+    exit;
+}
 // Insert query
 $sql = "INSERT INTO signup_login (username, email, phone, password, conf_password)
         VALUES ('$username', '$email', '$phone', '$password', '$conf_password')";
