@@ -1,44 +1,53 @@
-import React, { useEffect } from "react";
-import {useState} from 'react';
+
+import {useState,useEffect} from 'react';
 function Signup(){
- const [sign,setsign] = useState("Sign Up");
+    const [sign,setsign] = useState("Sign Up");
+    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState("");
+    const [password, setPassword] = useState("");
+    const [confPassword, setConfPassword] = useState("");
+    const [userdata, setuserdata] = useState([]);
 
- const [Username, setUsername] = useState("");
- const [Email, setEmail] = useState("");
- const [Phone, setPhone] = useState("");
- const [Password, setPassword] = useState("");
- const [ConfPassword, setConfPassword] = useState("");
- 
-  const handlesubmit = (e) => {
-    e.preventDefault();
+const handlesubmit = async (e) => {
+  e.preventDefault();
 
-    fetch("http://localhost/react-js/Chat-App/back-end/Registered.php", {
+  try {
+    const res = await fetch("http://localhost/React-js/Chat-App/back-end/Registered.php", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        username: Username,
-        email: Email,
-        phone: Phone,
-        password: Password,
+        username,
+        email,
+        phone,
+        password,
+        confPassword, // must match key in PHP
       }),
-    })
-    .then(async res => {
-  if (!res.ok) {
-    const errorText = await res.text();
-    throw new Error("Bad response: " + errorText);
-  }
-  return res.json();
-})
-.then(data => {
-  console.log("Response from PHP:", data);
-})
-.catch(err => {
-  console.error("Error:", err.message);
-});
+    });
 
-  };
+    const data = await res.json();
+    alert(data.message);
+
+    if (data.success) {
+      // Reset form after successful signup
+      setUsername("");
+      setEmail("");
+      setPhone("");
+      setPassword("");
+      setConfPassword("");
+      if(sign === "Sign Up") setsign("Login");// agr signup ho jae to wo login mode ma a jae ga
+    }
+
+  } catch (err) {
+    console.error("Server error:", err);
+    alert("Something went wrong!");
+  }
+};
+
+
+
     return(
         <>
             <div className="main">
@@ -53,13 +62,13 @@ function Signup(){
                                    className="form-control shadow-none" 
                                    id="floatingInputGroup1"
                                    placeholder="Username"
-                                   value={Username} 
+                                   value={username} 
                                    onChange={(e)=> setUsername(e.target.value)}
                                     />
                                 <label htmlFor="floatingInputGroup1">Username</label>
                              </div>
                         </div>
-                        {sign === "Sign Up" &&(
+                      {sign === "Sign Up" ? 
                             <div className="input-group mb-3">
                                 <span className="input-group-text"><i className="bi bi-envelope-fill"></i></span>
                                 <div className="form-floating">
@@ -68,14 +77,14 @@ function Signup(){
                                         className="form-control shadow-none" 
                                         id="floatingInputGroup1" 
                                         placeholder="Email"
-                                        value={Email}
+                                        value={email}
                                         onChange={(e)=> setEmail(e.target.value)}
                                         />
                                     <label htmlFor="floatingInputGroup1">Email</label>
                                 </div>
-                            </div>
-                        )}
-                        {sign === "Sign Up" &&(
+                            </div> : null
+                        }
+                        {sign === "Sign Up" ?
                             <div className="input-group mb-3">
                                  <span className="input-group-text"><i className="bi bi-telephone-fill"></i></span>
                                  <div className="form-floating">
@@ -84,13 +93,13 @@ function Signup(){
                                     className="form-control shadow-none" 
                                     id="floatingInputGroup1" 
                                     placeholder="Number"
-                                    value={Phone}
+                                    value={phone}
                                     onChange={(e)=>setPhone(e.target.value)}
                                     />
                                   <label htmlFor="floatingInputGroup1">Number</label>
                                 </div>
-                             </div>
-                        )}
+                             </div> :null
+                        }
                         <div className="input-group mb-3">
                              <span className="input-group-text"><i className="bi bi-person-fill-lock"></i></span>
                              <div className="form-floating">
@@ -99,13 +108,13 @@ function Signup(){
                                     className="form-control shadow-none" 
                                     id="floatingInputGroup1" 
                                     placeholder="Password"
-                                    value={Password}
+                                    value={password}
                                     onChange={(e)=> setPassword(e.target.value)}
                                     />
                                 <label htmlFor="floatingInputGroup1">Password</label>
                              </div>
                         </div>
-                        {sign ==="Sign Up" && (
+                        {sign ==="Sign Up" ?
                             <div className="input-group mb-3">
                              <span className="input-group-text"><i className="bi bi-person-fill-lock"></i></span>
                              <div className="form-floating">
@@ -114,13 +123,13 @@ function Signup(){
                                     className="form-control shadow-none" 
                                     id="floatingInputGroup1" 
                                     placeholder="confirm Password"
-                                    value={ConfPassword}
+                                    value={confPassword}
                                     onChange={(e)=> setConfPassword(e.target.value)}
                                     />
                                 <label htmlFor="floatingInputGroup1">Confirm Password</label>
                              </div>
-                        </div>
-                        )}
+                        </div> :null
+                        }
                         <button className="btn btn-dark w-100 round-5" type="submit">Submit</button>
                         <p>
                             {sign === "Sign Up" ? "Already have an acount ?" : "Don't have an acount?"}
