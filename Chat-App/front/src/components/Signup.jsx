@@ -1,5 +1,6 @@
 
 import {useState,useEffect} from 'react';
+import Loader from './loader';
 function Signup(){
     const [sign,setsign] = useState("Sign Up");
     const [username, setUsername] = useState("");
@@ -8,7 +9,15 @@ function Signup(){
     const [password, setPassword] = useState("");
     const [confPassword, setConfPassword] = useState("");
     const [userdata, setuserdata] = useState([]);
+    const [loader, setloader] = useState(true);
 
+
+    useEffect(()=>{
+        setTimeout(() => {
+            setloader(<Loader/>)
+        }, 3000);
+       
+    },[])
 const handlesubmit = async (e) => {
   e.preventDefault();
  if (!username || !email || !phone || !password || !confPassword) {
@@ -65,7 +74,9 @@ const handlesubmit = async (e) => {
 
 
     return(
+        
         <>
+         {loader === true ? <Loader/> :
             <div className="main">
                 <div className="signup-back">
                     <form className="form px-4" onSubmit={handlesubmit}>
@@ -156,7 +167,10 @@ const handlesubmit = async (e) => {
                     </form>
                 </div>
             </div>
+            }
         </>
+        
     )
 }
+ 
 export default Signup;

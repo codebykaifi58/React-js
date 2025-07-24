@@ -5,15 +5,11 @@ import './App.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import Loader from './components/loader';
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Signup />} />
-        <Route path="/chat" element={<Chat />} />
-      </Routes>
-    </Router>
+      <Signup/>
   );
 }
 export default App;
